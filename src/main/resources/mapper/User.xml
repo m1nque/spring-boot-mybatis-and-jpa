@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.m1nque.mybatis.demo.repository.UserMapper">
+    <resultMap id="UserHavingItems" type="User">
+        <collection property="items" ofType="Item">
+            <id column="itemId" property="id" />
+            <result column="itemName" property="itemName" />
+            <result column="itemType" property="itemType" />
+        </collection>
+    </resultMap>
+
+    <select id="selectUsers" parameterType="UserParam" resultType="User">
+        SELECT id, account
+        FROM user
+        <where>
+            <if test="account neq null and account neq ''">
+                account like concat('%', #{account}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectUsersWithItems" parameterType="UserParam" resultMap="UserHavingItems">
+        SELECT U.id as id, account, UI.itemId as itemId, itemName, itemType
+        FROM user U
+        LEFT JOIN user_item UI
+        ON U.id = UI.user_id
+        LEFT JOIN item I
+        ON UI.item_id = I.id
+        WHERE account = #{account}
+    </select>
+
+
+</mapper>
