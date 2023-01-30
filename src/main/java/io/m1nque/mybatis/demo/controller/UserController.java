@@ -30,10 +30,16 @@ public class UserController {
     @GetMapping("/jpa/users")
     public List<UserVo> getUsersByJpa (@RequestParam String account) {
         UserParam userParam = UserParam.builder().account(account).build();
-//        return userMapper.selectUsers(userParam);
         List<UserEntity> entities = userRepository.findByAccountContains(account);
 
         return entities.stream().map(e -> UserVo.builder().id(e.getId()).account(e.getAccount()).build()).toList();
+    }
+
+    @Transactional(readOnly = true)
+    @GetMapping("/mybatis/users")
+    public List<UserVo> getUsersByMaBatis (@RequestParam String account) {
+        UserParam userParam = UserParam.builder().account(account).build();
+        return userMapper.selectUsers(userParam);
     }
 
     @Transactional(readOnly = true)
@@ -50,13 +56,6 @@ public class UserController {
         userVo.setItems(items);
 
         return userVo;
-    }
-
-    @Transactional(readOnly = true)
-    @GetMapping("/mybatis/users")
-    public List<UserVo> getUsersByMaBatis (@RequestParam String account) {
-        UserParam userParam = UserParam.builder().account(account).build();
-        return userMapper.selectUsers(userParam);
     }
 
     @Transactional(readOnly = true)
