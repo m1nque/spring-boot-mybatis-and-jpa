@@ -13,6 +13,6 @@ import lombok.experimental.SuperBuilder;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String account;
 }

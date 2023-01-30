@@ -1,7 +1,11 @@
 package io.m1nque.mybatis.demo.controller;
 
 import io.m1nque.mybatis.demo.model.dto.UserParam;
+import io.m1nque.mybatis.demo.model.entity.ItemEntity;
 import io.m1nque.mybatis.demo.model.entity.UserEntity;
+import io.m1nque.mybatis.demo.model.entity.UserItemEntity;
+import io.m1nque.mybatis.demo.model.vo.ItemVo;
+import io.m1nque.mybatis.demo.repository.UserItemRepository;
 import io.m1nque.mybatis.demo.model.vo.UserVo;
 import io.m1nque.mybatis.demo.repository.UserMapper;
 import io.m1nque.mybatis.demo.repository.UserRepository;
@@ -18,6 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping
 public class UserController {
+    private final UserItemRepository userItemRepository;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
@@ -35,10 +40,14 @@ public class UserController {
     @GetMapping("/jpa/users/{account}")
     public UserVo getUserWithItemsByJpa (@PathVariable String account) {
         UserParam userParam = UserParam.builder().account(account).build();
-//        return userMapper.selectUsers(userParam);
         UserEntity userEntity = userRepository.findOne(Example.of(UserEntity.builder().account(account).build())).get();
-
         UserVo userVo = UserVo.builder().id(userEntity.getId()).account(userEntity.getAccount()).build();
+
+        List<UserItemEntity> itemEntity = userItemRepository.findAll(Example.of(UserItemEntity.builder().user(userEntity).build()));
+        List<ItemVo> items = itemEntity.stream()
+                .map(e -> ItemVo.of(e.getItem())).toList();
+
+        userVo.setItems(items);
 
         return userVo;
     }

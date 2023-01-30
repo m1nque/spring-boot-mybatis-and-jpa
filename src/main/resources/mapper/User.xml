@@ -4,7 +4,10 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="io.m1nque.mybatis.demo.repository.UserMapper">
+
     <resultMap id="UserHavingItems" type="User">
+        <id column="id" property="id"/>
+        <id column="account" property="account"/>
         <collection property="items" ofType="Item">
             <id column="itemId" property="id" />
             <result column="itemName" property="itemName" />
@@ -26,9 +29,9 @@
         SELECT U.id as id, account, UI.itemId as itemId, itemName, itemType
         FROM user U
         LEFT JOIN user_item UI
-        ON U.id = UI.user_id
+        ON U.id = UI.userId
         LEFT JOIN item I
-        ON UI.item_id = I.id
+        ON UI.itemId = I.id
         WHERE account = #{account}
     </select>
 
