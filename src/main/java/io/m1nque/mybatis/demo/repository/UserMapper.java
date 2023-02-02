@@ -10,5 +10,5 @@ import java.util.List;
 public interface UserMapper {
     List<UserVo> selectUsers (UserParam userParam);
 
-    UserVo selectUserWithItems (UserParam userParam);
+    List<UserVo> selectUsersWithItems (UserParam userParam);
 }
