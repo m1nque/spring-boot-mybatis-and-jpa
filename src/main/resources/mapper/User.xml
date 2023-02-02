@@ -9,9 +9,10 @@
         <id column="id" property="id"/>
         <id column="account" property="account"/>
         <collection property="items" ofType="Item">
-            <id column="itemId" property="id" />
-            <result column="itemName" property="itemName" />
-            <result column="itemType" property="itemType" />
+            <id column="item_id" property="id" />
+            <result column="item_name" property="itemName" />
+            <result column="item_type" property="itemType" />
+            <result column="quantity" property="quantity" />
         </collection>
     </resultMap>
 
@@ -25,13 +26,13 @@
         </where>
     </select>
 
-    <select id="selectUsersWithItems" parameterType="UserParam" resultMap="UserHavingItems">
-        SELECT U.id as id, account, UI.itemId as itemId, itemName, itemType
+    <select id="selectUserWithItems" parameterType="UserParam" resultMap="UserHavingItems">
+        SELECT U.id as id, account, UI.item_id as item_id, item_name, item_type, quantity
         FROM user U
         LEFT JOIN user_item UI
-        ON U.id = UI.userId
+        ON U.id = UI.user_id
         LEFT JOIN item I
-        ON UI.itemId = I.id
+        ON UI.item_id = I.id
         WHERE account = #{account}
     </select>
 

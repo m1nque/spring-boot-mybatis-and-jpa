@@ -5,5 +5,5 @@ import org.apache.ibatis.type.Alias;
 
 @Builder
 @Alias("UserParam")
-public record UserParam (Integer id, String account){
+public record UserParam (Integer mapId, String account){
 }
